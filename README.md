@@ -17,5 +17,25 @@ Open options menu for configuration panel to appear
 # Need to report a bug
 Please report them in the [Issues](https://github.com/LeCloutPanda/VampireModMenu/issues) section following this [Example Issue](https://github.com/LeCloutPanda/VampireModMenu/issues/1) as a template
 
+# Developers
+For those who want to intergrate support I would suggest adding this or equivalent support code to your mods
+
+```cs
+DateTime lastModified;
+
+public override void OnLateUpdate()
+{
+    base.OnLateUpdate();
+
+    DateTime lastWriteTime = File.GetLastWriteTime(filePath);
+
+    if (lastModified != lastWriteTime)
+    {
+        lastModified = lastWriteTime;
+        LoadConfig(); // Your method that loads the config and updates values
+    }
+}
+```
+
 # License 
 Distributed under the MIT License. See `LICENSE` for more information.
