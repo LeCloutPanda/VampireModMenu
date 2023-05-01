@@ -36,6 +36,19 @@ public override void OnLateUpdate()
     }
 }
 ```
+example method 
+```cs
+private static void LoadConfig()
+{
+    JObject json = JObject.Parse(File.ReadAllText(ConfigFile) ?? "{}");
+    
+    config.Name = (string)json.GetValue("Name");
+    config.FontFileName = (string)json.GetValue("FontFileName");
+    config.Color = (string)json.GetValue("Color");
+
+    FontDirectory = Path.GetFullPath(Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "UserData", config.FontFileName));
+}
+```
 
 # License 
 Distributed under the MIT License. See `LICENSE` for more information.
