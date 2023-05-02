@@ -11,9 +11,6 @@ using HarmonyLib;
 using Il2CppSystem.Collections.Generic;
 using System;
 using System.Globalization;
-using UnityEngine.Windows;
-using Il2CppVampireSurvivors.Data.Weapons;
-using Il2CppSystem.Runtime.InteropServices;
 
 namespace VampireModMenu
 {
@@ -31,12 +28,14 @@ namespace VampireModMenu
         public const string Description = "Adds a configuration screen for mods.";
         public const string Author = "LeCloutPanda";
         public const string Company = "Pandas Hell Hole";
-        public const string Version = "1.0.0.65";
+        public const string Version = "1.0.0.67";
         public const string DownloadLink = "";
     }
 
     public class VampireModMenuMod : MelonMod
     {
+        // Scroll Ui is centered but I want it to be from the top
+
         static ConfigData config = new ConfigData();
 
         static readonly string ConfigDirectory = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Configs");
@@ -203,7 +202,7 @@ namespace VampireModMenu
             scrollRect.gameObject.AddComponent<Image>().color = new Color(0.09803922f, 0.09803922f, 0.09803922f);
             scrollRect.gameObject.AddComponent<Mask>();
 
-            RectTransform entryPanel = CreateRect("Config Entries", scrollRect.transform, null, null, new Vector2(0.5f, 0.5f), null, new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 0), new Vector2(0, -40));
+            RectTransform entryPanel = CreateRect("Config Entries", scrollRect.transform, null, null, new Vector2(0.5f, 1.0f), null, new Vector2(0, 0), new Vector2(1, 1), new Vector2(0, 0), new Vector2(0, -40));
             entryPanel.gameObject.AddComponent<CanvasRenderer>();
             entryPanel.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             VerticalLayoutGroup entryPanelLayout = entryPanel.gameObject.AddComponent<VerticalLayoutGroup>();
@@ -215,6 +214,7 @@ namespace VampireModMenu
             tempImage.color = new Color(0.1960784f, 0.1960784f, 0.1960784f);
             tempImage.raycastTarget = true;
             scrollRectComp = scrollRect.gameObject.AddComponent<ScrollRect>();
+            scrollRectComp.movementType = ScrollRect.MovementType.Clamped;
             scrollRectComp.content = entryPanel;
             scrollRectComp.inertia = false;
             scrollRectComp.scrollSensitivity = config.ScrollSensitivity;

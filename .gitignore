@@ -122,3 +122,9 @@ bin/Debug/AsmResolver.PE.dll
 bin/Debug/AsmResolver.DotNet.dll
 bin/Debug/AsmResolver.dll
 bin/Debug/0Harmony.dll
+*.dll
+bin/Debug/VampireModMenu.dll
+bin/Debug/VampireModMenu.pdb
+obj/Debug/VampireModMenu.csproj.AssemblyReference.cache
+obj/Debug/VampireModMenu.dll
+obj/Debug/VampireModMenu.pdb
