@@ -28,14 +28,12 @@ namespace VampireModMenu
         public const string Description = "Adds a configuration screen for mods.";
         public const string Author = "LeCloutPanda";
         public const string Company = "Pandas Hell Hole";
-        public const string Version = "1.0.0.67";
+        public const string Version = "1.0.0.68";
         public const string DownloadLink = "";
     }
 
     public class VampireModMenuMod : MelonMod
     {
-        // Scroll Ui is centered but I want it to be from the top
-
         static ConfigData config = new ConfigData();
 
         static readonly string ConfigDirectory = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Configs");
