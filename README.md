@@ -9,10 +9,11 @@ A mod for [Vampire survivors](https://store.steampowered.com/app/1794680/Vampire
 4) Type **newenginepls** in the **Beta access code** input and hit enter
 5) Download and install [Melon Loader v0.61](https://github.com/LavaGang/MelonLoader/releases/tag/v0.6.1) for Vampire Survivors after it updates with the new engine
 6) Run the game at least once, it may freeze or appear to be frozen give it time to do its thing as it is doing stuff in the background 
-7) Once it's done close the game and download the latest release of [VampireModMenu](https://github.com/LeCloutPanda/VampireModMenu/releases/latest/download/VampireModMenu.dll) and place it into the **Mods** folder
+7) Once it's done close the game and download the latest release of [VampireModMenu](https://github.com/LeCloutPanda/VampireModMenu/releases/latest/download/VampireModMenu.dll) and [LiberationSans.ttf
+](https://github.com/LeCloutPanda/VampireModMenu/releases/download/v1.0.0/LiberationSans.ttf) and place the dll into your **Mods** folder and the font into your **UserData** folder
 
 # Usage
-Open options menu for configuration panel to appear
+Simply open the options menu for the configuration panel to appear
 
 # Need to report a bug
 Please report them in the [Issues](https://github.com/LeCloutPanda/VampireModMenu/issues) section following this [Example Issue](https://github.com/LeCloutPanda/VampireModMenu/issues/1) as a template
