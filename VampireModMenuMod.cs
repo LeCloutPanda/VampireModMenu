@@ -6,8 +6,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.IO;
 using UnityEngine;
-using Il2CppVampireSurvivors.UI;
-using HarmonyLib;
 using Il2CppSystem.Collections.Generic;
 using System;
 using System.Globalization;
@@ -28,8 +26,8 @@ namespace VampireModMenu
         public const string Description = "Adds a configuration screen for mods.";
         public const string Author = "LeCloutPanda";
         public const string Company = "Pandas Hell Hole";
-        public const string Version = "1.0.0.68";
-        public const string DownloadLink = "";
+        public const string Version = "1.0.1";
+        public const string DownloadLink = "https://github.com/LeCloutPanda/VampireModMenu";
     }
 
     public class VampireModMenuMod : MelonMod
@@ -39,14 +37,12 @@ namespace VampireModMenu
         static readonly string ConfigDirectory = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Configs");
         static readonly string ConfigFile = Path.Combine(ConfigDirectory, "VampireModMenu.json");
         static string FontDirectory;
-       
-        static TMP_FontAsset newFont;
-        static bool createdConfigPanel = true;
-        static Transform configPanel = null;
-        static Transform optionsPage = null;
 
-        DateTime lastModified;
-        string currentScene;
+        static TMP_FontAsset newFont;
+        static bool createdConfigPanel = false;
+        static Transform configPanel = null;
+
+        static DateTime lastModified;
 
         public override void OnInitializeMelon()
         {
@@ -61,8 +57,7 @@ namespace VampireModMenu
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
         {
             base.OnSceneWasLoaded(buildIndex, sceneName);
-            if (sceneName.ToLower() == "mainmenu") createdConfigPanel = false;
-            currentScene = sceneName.ToLower();
+            createdConfigPanel = false;
         }
 
         static void CreateMenu()
@@ -70,7 +65,8 @@ namespace VampireModMenu
             if (createdConfigPanel) return;
 
             MelonLogger.Msg("Creating Mod Configuration Panel");
-            try {
+            try
+            {
                 try
                 {
                     Font f = new Font();
@@ -113,12 +109,6 @@ namespace VampireModMenu
             }
         }
 
-        public override void OnUpdate()
-        {
-            base.OnUpdate();
-            if (optionsPage != null && configPanel != null && createdConfigPanel == true && currentScene == "mainmenu") configPanel.gameObject.active = optionsPage.gameObject.active;
-        }
-
         public override void OnLateUpdate()
         {
             base.OnLateUpdate();
@@ -130,16 +120,10 @@ namespace VampireModMenu
                 lastModified = lastWriteTime;
                 LoadConfig();
             }
-        }
-
-        [HarmonyPatch(typeof(OptionsController), nameof(OptionsController.AddTabs))]
-        class PatchOptionsPage
-        {
-            [HarmonyPrefix]
-            static void Prefix(OptionsController __instance)
+            if (Input.GetKeyDown(KeyCode.Backslash))
             {
-                CreateMenu();
-                optionsPage = __instance.transform;
+                if (createdConfigPanel == false) CreateMenu();
+                else configPanel.gameObject.SetActive(!configPanel.gameObject.active);
             }
         }
 
@@ -147,14 +131,14 @@ namespace VampireModMenu
         {
             RectTransform newRect = new GameObject(name).gameObject.AddComponent<RectTransform>().GetComponent<RectTransform>();
             if (parent != null) newRect.parent = parent.transform;
-            if (localPosition != null) newRect.localPosition = (Vector2) localPosition;
-            if (anchoredPosition != null) newRect.anchoredPosition = (Vector2) anchoredPosition;
-            if (pivot != null) newRect.pivot = (Vector2) pivot;
-            if (sizeDelta != null) newRect.sizeDelta = (Vector2) sizeDelta;
-            if (anchorMin != null) newRect.anchorMin = (Vector2) anchorMin;
-            if (anchorMax != null) newRect.anchorMax = (Vector2) anchorMax;
-            if (offsetMin != null) newRect.offsetMin = (Vector2) offsetMin;
-            if (offsetMax != null) newRect.offsetMax = (Vector2) offsetMax;
+            if (localPosition != null) newRect.localPosition = (Vector2)localPosition;
+            if (anchoredPosition != null) newRect.anchoredPosition = (Vector2)anchoredPosition;
+            if (pivot != null) newRect.pivot = (Vector2)pivot;
+            if (sizeDelta != null) newRect.sizeDelta = (Vector2)sizeDelta;
+            if (anchorMin != null) newRect.anchorMin = (Vector2)anchorMin;
+            if (anchorMax != null) newRect.anchorMax = (Vector2)anchorMax;
+            if (offsetMin != null) newRect.offsetMin = (Vector2)offsetMin;
+            if (offsetMax != null) newRect.offsetMax = (Vector2)offsetMax;
 
             return newRect;
         }
@@ -314,12 +298,13 @@ namespace VampireModMenu
             tempImage.raycastTarget = true;
 
             Toggle checkBoxToggle = checkBoxRect.gameObject.AddComponent<Toggle>();
+            checkBoxToggle.navigation.mode = Navigation.Mode.None;
             JsonModifier jsonModifier = Parent.GetComponent<JsonModifier>();
 
             void ValueChanged(bool value) => jsonModifier.ModifyConfigValue(Property.Name, value);
             System.Action<bool> valueChanged = ValueChanged;
             checkBoxToggle.onValueChanged.AddListener(valueChanged);
-                
+
             checkBoxToggle.isOn = (bool)Property.Value;
             checkBoxToggle.transition = Selectable.Transition.None;
             checkBoxToggle.toggleTransition = Toggle.ToggleTransition.None;
@@ -351,6 +336,8 @@ namespace VampireModMenu
             tempImage.raycastTarget = true;
 
             TMP_InputField input = inputRect.gameObject.AddComponent<TMP_InputField>();
+            input.navigation.mode = Navigation.Mode.None;
+
             input.text = (string)Property.Value;
             input.selectionColor = HexToColor("#A8CEFF");
             input.caretBlinkRate = 1;
@@ -362,10 +349,9 @@ namespace VampireModMenu
             System.Action<string> valueChanged = ValueChanged;
             input.onValueChanged.AddListener(valueChanged);
 
-
             RectTransform inputTextArea = CreateRect("Text Area", inputRect.transform, null, new Vector2(0, -0.5f), new Vector2(0.5f, 0.5f), new Vector2(-10, -9), new Vector2(0, 0), new Vector2(1, 1), null, null);
 
-            RectTransform valueInput = CreateRect("Input Text", inputTextArea.transform, null, Vector2.zero, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(0, 0), new Vector2(1, 1), null, null); 
+            RectTransform valueInput = CreateRect("Input Text", inputTextArea.transform, null, Vector2.zero, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(0, 0), new Vector2(1, 1), null, null);
             valueInput.gameObject.AddComponent<CanvasRenderer>();
             TextMeshProUGUI valueInputTextMesh = valueInput.gameObject.AddComponent<TextMeshProUGUI>();
             valueInputTextMesh.text = (string)Property.Value;
@@ -374,7 +360,7 @@ namespace VampireModMenu
             valueInputTextMesh.color = Color.white;
             valueInputTextMesh.alignment = TextAlignmentOptions.Left;
             valueInputTextMesh.fontSize = 14;
-                
+
             input.textViewport = inputTextArea;
             input.textComponent = valueInputTextMesh;
             input.fontAsset = newFont;
@@ -404,6 +390,8 @@ namespace VampireModMenu
             tempImage.raycastTarget = true;
 
             TMP_InputField input = inputRect.gameObject.AddComponent<TMP_InputField>();
+            input.navigation.mode = Navigation.Mode.None;
+
             input.text = (string)Property.Value;
             input.contentType = ContentType;
             input.selectionColor = HexToColor("#A8CEFF");
@@ -418,7 +406,7 @@ namespace VampireModMenu
                 System.Action<string> valueChanged = ValueChanged;
                 input.onValueChanged.AddListener(valueChanged);
             }
-            else if(ContentType == TMP_InputField.ContentType.DecimalNumber)
+            else if (ContentType == TMP_InputField.ContentType.DecimalNumber)
             {
                 void ValueChanged(string value) => jsonModifier.ModifyConfigValue(Property.Name, float.Parse(value));
                 System.Action<string> valueChanged = ValueChanged;
@@ -494,7 +482,7 @@ namespace VampireModMenu
                 blue = int.Parse(hexColor[2].ToString() + hexColor[2].ToString(), NumberStyles.AllowHexSpecifier);
             }
 
-            return new Color((float) red / 255, (float) green / 255, (float) blue / 255, 1f);
+            return new Color((float)red / 255, (float)green / 255, (float)blue / 255, 1f);
         }
     }
 
