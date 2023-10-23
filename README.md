@@ -1,3 +1,5 @@
+## Until futher notice this mod is no longer being worked on, thank you to those who used it whilst it was being developed.
+
 # VampireModMenu
  
 A mod for [Vampire survivors](https://store.steampowered.com/app/1794680/Vampire_Survivors/) that uses [Melon Loader](https://github.com/LavaGang/MelonLoader) to load the mod
